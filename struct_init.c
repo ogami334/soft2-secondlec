@@ -37,7 +37,7 @@ int main(int argc, char **argv)
   // 通常の配列（可変長でない）は、以下で初期化できる
   Point ps1[2] = { { .x = 1, .y = 2}, {.x = 3, .y = 4} };
   // **静的配列**の場合は、以下で配列サイズを取得可能
-  size_t num_ps = sizeof ps1 / sizeof(Point);
+  size_t num_ps = sizeof ps1 / sizeof(Point); //これは何?
 
   for (int i = 0 ; i < num_ps ; i ++)
     printf("ps1[%d]: (%3.1f %3.1f)\n", i,ps1[i].x, ps1[i].y);
