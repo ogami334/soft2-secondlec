@@ -1,6 +1,4 @@
-# プログラムの説明
-プログラムで表示したアドレスを基に数えると、各変数が占める領域はそれぞれ、
-##student型構造体
+#student型構造体
 
 id     int         4
 
@@ -13,7 +11,9 @@ height double      8
 weight double      8
 
 
-##tagged_student1型構造体
+
+
+#tagged_student1型構造体
 
 id     int         4
 
@@ -28,7 +28,9 @@ weight double      8
 **char   tag         8**
 
 
-##tagged_student2型構造体
+
+
+#tagged_student2型構造体
 
 **tag    char        4**
 
