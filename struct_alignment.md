@@ -1,4 +1,4 @@
-#student型構造体
+# student型構造体
 
 id     int         4
 
@@ -13,7 +13,7 @@ weight double      8
 
 
 
-#tagged_student1型構造体
+# tagged_student1型構造体
 
 id     int         4
 
@@ -30,7 +30,7 @@ weight double      8
 
 
 
-#tagged_student2型構造体
+# tagged_student2型構造体
 
 **tag    char        4**
 
