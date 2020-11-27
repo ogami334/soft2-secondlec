@@ -3,9 +3,43 @@
 ##student型構造体
 
 id     int         4
+
 name   char[100] 100
-age    int         8
+
+**age    int         8**
+
 height double      8
+
+weight double      8
+
+
+##tagged_student1型構造体
+
+id     int         4
+
+name   char[100] 100
+
+**age    int         8**
+
+height double      8
+
+weight double      8
+
+**char   tag         8**
+
+
+##tagged_student2型構造体
+
+**tag    char        4**
+
+id     int         4         
+
+name   char[100] 100
+
+age    int         4
+
+height double      8
+
 weight double      8
 
 以下は、マークダウンの書き方のサンプル。全て消してください。そのあと、プログラムの説明を書いて下さい。
