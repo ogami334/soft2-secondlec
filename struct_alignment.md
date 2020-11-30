@@ -25,7 +25,7 @@ height double      8
 
 weight double      8
 
-**char   tag         8**
+**tag  char         8**
 
 
 
@@ -43,6 +43,8 @@ age    int         4
 height double      8
 
 weight double      8
+
+前からなるべく早く8の倍数になるようにしている?
 
 以下は、マークダウンの書き方のサンプル。全て消してください。そのあと、プログラムの説明を書いて下さい。
 
