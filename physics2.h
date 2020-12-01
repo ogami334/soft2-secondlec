@@ -66,7 +66,12 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
       map[(int) (objs[i].y + cond.height/2)][cond.width- cond.width/2-1]=1;
     }
   }
+  for (int i=0;i<cond.width+2;i++) {
+    printf("-");
+  } //上の壁
+  printf("\n");
   for (int i=0;i<cond.height;i++) {
+    printf("|");
     for (int j=0;j<cond.width;j++) {
       if (map[i][j]==1) {
         printf("o");
@@ -75,9 +80,12 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
         printf(" ");
       }
     }
-    printf("\n");
+    printf("|\n");
   }
-  printf("-----\n");
+  for (int i=0;i<cond.width+2;i++) {
+    printf("-");
+  } //下の壁
+  printf("\n");
   printf("t = %.1lf ",t);
   for (int i=0;i<numobj;i++) {
     printf("objs[%d].y = %.2lf ",i,objs[i].y);
@@ -88,13 +96,13 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
 
 void my_bounce(Object objs[], const size_t numobj, const Condition cond) {
   for (int i=0;i<numobj;i++) {
-    if (objs[i].prev_y<20 && objs[i].y>20) {
+    if (objs[i].prev_y<cond.height/2 && objs[i].y>cond.height/2) {
       objs[i].vy*= -(cond.cor);
-      objs[i].y = 40 -objs[i].y;
+      objs[i].y = cond.height -objs[i].y;
     }
-    else if (objs[i].prev_y>-20 && objs[i].y<-20) {
+    else if (objs[i].prev_y>-cond.height/2 && objs[i].y<-cond.height/2) {
       objs[i].vy *= -(cond.cor);
-      objs[i].y = -40 - objs[i].y;
+      objs[i].y = -cond.height - objs[i].y;
     }
   }
 }
