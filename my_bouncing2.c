@@ -1,3 +1,10 @@
+//二次元化する
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <math.h>
+//#include "physics3.h"
+
 // シミュレーション条件を格納する構造体
 // 反発係数CORを追加
 typedef struct condition
@@ -127,3 +134,90 @@ void my_bounce(Object objs[], const size_t numobj, const Condition cond) {
   }
 } //衝突に関してはひとまず、衝突せずに動いた場合の壁からの距離を折り返し、速度を(-e)倍にするという実装にしている
 //速度がとても大きいとバグの原因になりそう
+
+
+int main(int argc, char **argv){
+  const Condition cond = {
+		    .width  = 75,
+		    .height = 40,
+		    .G = 1.0,
+		    .dt = 1.0,
+		    .corx = 0.2,
+        .cory = 0.8
+  };//これは変えなくて良さそう
+  
+  size_t objnum = 2;
+  Object objects[objnum];
+  if ( argc != 2 ) {
+    fprintf(stderr, "usage: %s [filename for init]\n", argv[0]);
+    return EXIT_FAILURE;
+  }  
+  else {
+    FILE *fp;
+    int flag=1;
+    int cnt=0;
+    if ((fp =fopen(argv[1],"r"))!=NULL) {
+      while (flag==1) {
+        if (fgetc(fp)=='#') {
+          char trash[100];
+          fscanf(fp,"%[^\n]*1[\n]",trash);
+        }
+        else {
+          double a,b,c,d,e;
+          char buf[100];
+          int item=fscanf(fp,"%lf %lf %lf %lf %lf%[^\n]*1[\n]",&a,&b,&c,&d,&e,buf);
+          if (item>0 && cnt<objnum) {
+            objects[cnt].m=a;
+            objects[cnt].x=b;
+            objects[cnt].y=c;
+            objects[cnt].vx=d;
+            objects[cnt].vy=e;
+            cnt+=1;
+          }
+          else {
+            flag=0;
+          }
+        }
+      }
+      if (objnum>cnt+1) {
+        for (int i=0;i<objnum-cnt-1;i++) {
+          objects[cnt].m=0;
+          objects[cnt].x=-1000;
+          objects[cnt].y=-1000;
+          objects[cnt].vx=0;
+          objects[cnt].vy=0;
+        }
+      }
+    }
+  }
+
+  // objects[1] は巨大な物体を画面外に... 地球のようなものを想定
+  /*objects[0] = (Object){ .m = 60.0, .x = 3.0, .y = -19.9, .vx = -4.0, .vy = 2.0};
+  objects[1] = (Object){ .m = 100000.0, .x =0.1, .y =  1000.0, .vx =0, .vy = 0.0};
+  objects[2] = (Object){ .m = 60.0, .x = -3.0, .y = -19.9, .vx =3.0, .vy =1.5};*/
+
+  // シミュレーション. ループは整数で回しつつ、実数時間も更新する
+  const double stop_time = 400;
+  double t = 0;
+  printf("\n");
+  for (int i = 0 ; t <= stop_time ; i++){
+    t = i * cond.dt;
+    //update_velocities(objects, objnum, cond);
+    //update_positions(objects, objnum, cond);
+    my_update_velocities_and_positions(objects,objnum,cond);
+
+    //bounce(objects, objnum, cond);
+    my_bounce(objects, objnum, cond);
+    
+    // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする
+    my_plot_objects(objects, objnum, t, cond);
+    
+    usleep(200 * 1000); // 200 x 1000us = 200 ms ずつ停止
+    printf("\e[%dA", cond.height+3);// 壁とパラメータ表示分で3行
+  }
+  return EXIT_SUCCESS;
+}
+
+// 実習: 以下に my_ で始まる関数を実装する
+// 最終的に phisics2.h 内の事前に用意された関数プロトタイプをコメントアウト
+
