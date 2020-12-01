@@ -72,7 +72,7 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
     }
   }
   for (int i=0;i<numobj;i++) {
-    if ((objs[i].m>0) && (-cond.height <= 2*objs[i].y) && (2*objs[i].y <=cond.height) && (-cond.width <= 2*objs[i].x) && (2*objs[i].x <= cond.width)) {
+    if ((-cond.height <= 2*objs[i].y) && (2*objs[i].y <=cond.height) && (-cond.width <= 2*objs[i].x) && (2*objs[i].x <= cond.width)) {
       map[(int) (objs[i].y + cond.height/2)][(int) (objs[i].x + cond.width/2)]=1;
     }
   }
