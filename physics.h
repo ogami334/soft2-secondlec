@@ -57,8 +57,6 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
   for (int i=0;i<numobj;i++) {
     if ((-cond.height <= 2*objs[i].y) && (2*objs[i].y <=cond.height)) {
       map[(int) (objs[i].y + cond.height/2)][cond.width- cond.width/2-1]=1;
-      //printf("%d %d\n",(int) (objs[i].y +cond.height/2),cond.width- cond.width/2);
-      //printf("True\n");
     }
   }
   for (int i=0;i<cond.height;i++) {

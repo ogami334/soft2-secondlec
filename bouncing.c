@@ -27,9 +27,12 @@ int main(int argc, char **argv)
   printf("\n");
   for (int i = 0 ; t <= stop_time ; i++){
     t = i * cond.dt;
-    update_velocities(objects, objnum, cond);
-    update_positions(objects, objnum, cond);
-    bounce(objects, objnum, cond);
+    //update_velocities(objects, objnum, cond);
+    //update_positions(objects, objnum, cond);
+    my_update_velocities_and_positions(objects,objnum,cond);
+
+    //bounce(objects, objnum, cond);
+    my_bounce(objects, objnum, cond);
     
     // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする
     plot_objects(objects, objnum, t, cond);
