@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
-//#include "physics3.h"
 
 // シミュレーション条件を格納する構造体
 // 反発係数CORを追加
@@ -68,8 +67,6 @@ void my_update_velocities_and_positions(Object objs[], const size_t numobj, cons
     objs[i].vy =objs[i].vy + accels[i][1] * cond.dt;
   } //最後に速度を更新
 }
-//void my_update_positions(Object objs[], const size_t numobj, const Condition cond);
-
 
 void my_plot_objects(Object objs[], const size_t numobj, const double t, const Condition cond) {
   int map[cond.height][cond.width];

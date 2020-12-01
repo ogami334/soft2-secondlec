@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
-//#include "physics3.h"
 
 // シミュレーション条件を格納する構造体
 // 反発係数CORを追加
@@ -31,11 +30,6 @@ typedef struct object
 
 // 授業で用意した関数のプロトタイプ宣言
 
-void plot_objects(Object objs[], const size_t numobj, const double t, const Condition cond);
-void update_velocities(Object objs[], const size_t numobj, const Condition cond);
-void update_positions(Object objs[], const size_t numobj, const Condition cond);
-void bounce(Object objs[], const size_t numobj, const Condition cond);
-
 // To do: 以下に上記と同じ引数で実行される my_* を作成
 // 実装できたらmain関数で上記と入れ替えていく
 // my_plot_objects(), my_update_velocities(), my_update_positions(), my_bounce の4つ 
@@ -45,7 +39,7 @@ void my_update_velocities_and_positions(Object objs[], const size_t numobj, cons
     for (int j=0;j<2;j++) {
         accels[i][j]=0;        
     }
-  } //j=0がx
+  }
   for (int i=0;i<numobj;i++) {
     objs[i].prev_y=objs[i].y;
     objs[i].prev_x=objs[i].x;
@@ -68,7 +62,6 @@ void my_update_velocities_and_positions(Object objs[], const size_t numobj, cons
     objs[i].vy =objs[i].vy + accels[i][1] * cond.dt;
   } //最後に速度を更新
 }
-//void my_update_positions(Object objs[], const size_t numobj, const Condition cond);
 
 
 void my_plot_objects(Object objs[], const size_t numobj, const double t, const Condition cond) {
@@ -132,8 +125,8 @@ void my_bounce(Object objs[], const size_t numobj, const Condition cond) {
     }
 
   }
-} //衝突に関してはひとまず、衝突せずに動いた場合の壁からの距離を折り返し、速度を(-e)倍にするという実装にしている
-//速度がとても大きいとバグの原因になりそう
+} //衝突に関しては、衝突せずに動いた場合の壁からの距離を折り返し、速度を(-e)倍にするという実装にしています。
+
 void my_integration(Object objs[], const size_t numobj, const Condition cond,double dist) {
     for (int i=0;i<numobj;i++) {
         for (int j=0;j<numobj;j++) {
@@ -150,7 +143,7 @@ void my_integration(Object objs[], const size_t numobj, const Condition cond,dou
             }
         }
     }
-}
+}//任意の二物体の組に関して、距離がdist以下になったら運動量保存則に基づき、融合して一つの物体になり、速度が変化します。
 
 int main(int argc, char **argv){
   const Condition cond = {
@@ -160,14 +153,13 @@ int main(int argc, char **argv){
 		    .dt = 1.0,
 		    .corx = 0.2,
             .cory = 0.8
-  };//これは変えなくて良さそう
+  };
   
   if ( argc != 3 ) {
     fprintf(stdout,"error\n");
     return EXIT_FAILURE;
   }  
   size_t objnum =atoi(argv[1]);
-  //printf("%zu\n",objnum);
   Object objects[objnum];
   FILE *fp;
   int flag=1;
@@ -198,33 +190,20 @@ int main(int argc, char **argv){
     }
   }
 
-  // objects[1] は巨大な物体を画面外に... 地球のようなものを想定
-  /*objects[0] = (Object){ .m = 60.0, .x = 3.0, .y = -19.9, .vx = -4.0, .vy = 2.0};
-  objects[1] = (Object){ .m = 100000.0, .x =0.1, .y =  1000.0, .vx =0, .vy = 0.0};
-  objects[2] = (Object){ .m = 60.0, .x = -3.0, .y = -19.9, .vx =3.0, .vy =1.5};*/
-
   // シミュレーション. ループは整数で回しつつ、実数時間も更新する
   const double stop_time = 400;
   double t = 0;
   printf("\n");
   for (int i = 0 ; t <= stop_time ; i++){
     t = i * cond.dt;
-    //update_velocities(objects, objnum, cond);
-    //update_positions(objects, objnum, cond);
     my_update_velocities_and_positions(objects,objnum,cond);
-    //bounce(objects, objnum, cond);
     my_bounce(objects, objnum, cond);
     my_integration(objects, objnum, cond,4.0);
-    
     // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする
     my_plot_objects(objects, objnum, t, cond);
-    
     usleep(200 * 1000); // 200 x 1000us = 200 ms ずつ停止
     printf("\e[%dA", cond.height+3);// 壁とパラメータ表示分で3行
   }
   return EXIT_SUCCESS;
 }
-
-// 実習: 以下に my_ で始まる関数を実装する
-// 最終的に phisics2.h 内の事前に用意された関数プロトタイプをコメントアウト
 
