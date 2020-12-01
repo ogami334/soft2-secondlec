@@ -92,5 +92,9 @@ void my_bounce(Object objs[], const size_t numobj, const Condition cond) {
       objs[i].vy*= -(cond.cor);
       objs[i].y = 40 -objs[i].y;
     }
+    else if (objs[i].prev_y>-20 && objs[i].y<-20) {
+      objs[i].vy *= -(cond.cor);
+      objs[i].y = -40 - objs[i].y;
+    }
   }
 }
