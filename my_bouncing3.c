@@ -26,6 +26,7 @@ typedef struct object
   double prev_y; // 壁からの反発に使用
   double vx;
   double vy;
+  int exist; //合体して消えた物体は0
 } Object;
 
 // 授業で用意した関数のプロトタイプ宣言
@@ -72,7 +73,7 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
     }
   }
   for (int i=0;i<numobj;i++) {
-    if ((-cond.height <= 2*objs[i].y) && (2*objs[i].y <=cond.height) && (-cond.width <= 2*objs[i].x) && (2*objs[i].x <= cond.width)) {
+    if ((objs[i].exist ==1) && (-cond.height <= 2*objs[i].y) && (2*objs[i].y <=cond.height) && (-cond.width <= 2*objs[i].x) && (2*objs[i].x <= cond.width)) {
       map[(int) (objs[i].y + cond.height/2)][(int) (objs[i].x + cond.width/2)]=1;
     }
   }
@@ -98,8 +99,10 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
   printf("\n");
   printf("t = %.1lf ",t);
   for (int i=0;i<numobj;i++) {
-    printf("objs[%d].x = %.2lf ",i,objs[i].x);
-    printf("objs[%d].y = %.2lf ",i,objs[i].y);
+    if (objs[i].exist==1) { //合体して消えた物体は表示しないようにする
+        printf("objs[%d].x = %.2lf ",i,objs[i].x);
+        printf("objs[%d].y = %.2lf ",i,objs[i].y);
+    }
   }
   printf("\n");
   
@@ -140,6 +143,7 @@ void my_integration(Object objs[], const size_t numobj, const Condition cond,dou
                 objs[j].vy=0;
                 objs[i].m=objs[i].m+objs[j].m;
                 objs[j].m=0;
+                objs[j].exist=0;//jの方は消える
             }
         }
     }
@@ -173,6 +177,7 @@ int main(int argc, char **argv){
       }
       if (cnt<objnum) {
         if (sscanf(buf,"%lf %lf %lf %lf %lf", &objects[cnt].m, &objects[cnt].x, &objects[cnt].y, &objects[cnt].vx, &objects[cnt].vy) ==5) {
+          objects[cnt].exist=1;
           cnt+=1;
         }
       }
@@ -187,9 +192,11 @@ int main(int argc, char **argv){
         objects[i+cnt].y=-1000;
         objects[i+cnt].vx=0;
         objects[i+cnt].vy=0;
+        objects[i+cnt].exist=0;
       }
     }
   }
+  
 
   // シミュレーション. ループは整数で回しつつ、実数時間も更新する
   const double stop_time = 400;
