@@ -6,6 +6,7 @@
 #include <math.h>
 #include "physics.h" // この中に構造体定義、関数プロトタイプがある
 
+
 int main(int argc, char **argv)
 {
   const Condition cond = {
@@ -32,7 +33,7 @@ int main(int argc, char **argv)
     update_positions(objects, objnum, cond);
 
     // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする
-    plot_objects(objects, objnum, t, cond);
+    my_plot_objects(objects, objnum, t, cond);
     
     usleep(200 * 1000); // 200 x 1000us = 200 ms ずつ停止
     printf("\e[%dA", cond.height+2);// 表示位置を巻き戻す。壁がないのでheight+2行（境界とパラメータ表示分）

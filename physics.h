@@ -24,3 +24,43 @@ void update_positions(Object objs[], const size_t numobj, const Condition cond);
 // To do: 以下に上記と同じ引数で実行される my_* を作成
 // 実装できたらmain関数で上記と入れ替えていく
 // my_plot_objects(), my_update_velocities(), my_update_positions() の3つ 
+//void my_plot_objects(Object objs[], const size_t numobj, const double t, const Condition cond);
+void my_update_velocities(Object objs[], const size_t numobj, const Condition cond);
+void my_update_positions(Object objs[], const size_t numobj, const Condition cond);
+
+
+void my_plot_objects(Object objs[], const size_t numobj, const double t, const Condition cond) {
+  int map[cond.height][cond.width];
+  for (int i=0;i<cond.height;i++) {
+    for (int j=0;j<cond.width;j++) {
+      map[i][j]=0;
+    }
+  }
+  for (int i=0;i<numobj;i++) {
+    if ((-cond.height <= 2*objs[i].y) && (2*objs[i].y <=cond.height)) {
+      map[(int) (objs[i].y + cond.height/2)][cond.width- cond.width/2]=1;
+      //printf("%d %d\n",(int) (objs[i].y +cond.height/2),cond.width- cond.width/2);
+      //printf("True\n");
+    }
+  }
+  for (int i=0;i<cond.height;i++) {
+    for (int j=0;j<cond.width;j++) {
+      if (map[i][j]==1) {
+        printf("o");
+      }
+      else {
+        printf(" ");
+      }
+    }
+    printf("\n");
+  }
+  printf("-----\n");
+  printf("t = %.1lf ",t);
+  for (int i=0;i<numobj;i++) {
+    printf("objs[%d].y = %.2lf ",i,objs[i].y);
+  }
+  printf("\n");
+  printf("\n");
+
+  
+}
