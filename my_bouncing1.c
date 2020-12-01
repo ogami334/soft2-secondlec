@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
-//#include "physics3.h"
 
 // シミュレーション条件を格納する構造体
 // 反発係数CORを追加
@@ -29,12 +28,6 @@ typedef struct object
   double vy;
 } Object;
 
-// 授業で用意した関数のプロトタイプ宣言
-
-void plot_objects(Object objs[], const size_t numobj, const double t, const Condition cond);
-void update_velocities(Object objs[], const size_t numobj, const Condition cond);
-void update_positions(Object objs[], const size_t numobj, const Condition cond);
-void bounce(Object objs[], const size_t numobj, const Condition cond);
 
 // To do: 以下に上記と同じ引数で実行される my_* を作成
 // 実装できたらmain関数で上記と入れ替えていく
@@ -45,7 +38,7 @@ void my_update_velocities_and_positions(Object objs[], const size_t numobj, cons
     for (int j=0;j<2;j++) {
         accels[i][j]=0;        
     }
-  } //j=0がx
+  }
   for (int i=0;i<numobj;i++) {
     objs[i].prev_y=objs[i].y;
     objs[i].prev_x=objs[i].x;
@@ -67,8 +60,7 @@ void my_update_velocities_and_positions(Object objs[], const size_t numobj, cons
     objs[i].vx =objs[i].vx + accels[i][0] * cond.dt;
     objs[i].vy =objs[i].vy + accels[i][1] * cond.dt;
   } //最後に速度を更新
-}
-//void my_update_positions(Object objs[], const size_t numobj, const Condition cond);
+} //オイラー法の漸化式に従って依存関係がない順番で計算しました。
 
 
 void my_plot_objects(Object objs[], const size_t numobj, const double t, const Condition cond) {
@@ -132,8 +124,7 @@ void my_bounce(Object objs[], const size_t numobj, const Condition cond) {
     }
 
   }
-} //衝突に関してはひとまず、衝突せずに動いた場合の壁からの距離を折り返し、速度を(-e)倍にするという実装にしている
-//速度がとても大きいとバグの原因になりそう
+} //衝突に関しては、衝突せずに動いた場合の壁からの距離を折り返し、速度を(-e)倍にするという実装にしています。
 
 
 int main(int argc, char **argv)
@@ -145,7 +136,7 @@ int main(int argc, char **argv)
 		    .dt = 1.0,
 		    .corx = 0.2,
         .cory = 0.8
-  };//これは変えなくて良さそう
+  };//x方向の反発係数をかなり小さくしてみました.
   
   size_t objnum = 3;
   Object objects[objnum];
@@ -161,22 +152,14 @@ int main(int argc, char **argv)
   printf("\n");
   for (int i = 0 ; t <= stop_time ; i++){
     t = i * cond.dt;
-    //update_velocities(objects, objnum, cond);
-    //update_positions(objects, objnum, cond);
     my_update_velocities_and_positions(objects,objnum,cond);
-
-    //bounce(objects, objnum, cond);
     my_bounce(objects, objnum, cond);
-    
     // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする
     my_plot_objects(objects, objnum, t, cond);
-    
     usleep(200 * 1000); // 200 x 1000us = 200 ms ずつ停止
     printf("\e[%dA", cond.height+3);// 壁とパラメータ表示分で3行
   }
   return EXIT_SUCCESS;
 }
 
-// 実習: 以下に my_ で始まる関数を実装する
-// 最終的に phisics2.h 内の事前に用意された関数プロトタイプをコメントアウト
 

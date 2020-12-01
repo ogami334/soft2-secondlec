@@ -76,6 +76,7 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
       map[(int) (objs[i].y + cond.height/2)][(int) (objs[i].x + cond.width/2)]=1;
     }
   }
+
   for (int i=0;i<cond.width+2;i++) {
     printf("-");
   } //上の壁
