@@ -146,47 +146,38 @@ int main(int argc, char **argv){
         .cory = 0.8
   };//これは変えなくて良さそう
   
-  size_t objnum = 2;
-  Object objects[objnum];
-  if ( argc != 2 ) {
-    fprintf(stderr, "usage: %s [filename for init]\n", argv[0]);
+  if ( argc != 3 ) {
+    fprintf(stdout,"error\n");
     return EXIT_FAILURE;
   }  
-  else {
-    FILE *fp;
-    int flag=1;
-    int cnt=0;
-    if ((fp =fopen(argv[1],"r"))!=NULL) {
-      while (flag==1) {
-        if (fgetc(fp)=='#') {
-          char trash[100];
-          fscanf(fp,"%[^\n]*1[\n]",trash);
-        }
-        else {
-          double a,b,c,d,e;
-          char buf[100];
-          int item=fscanf(fp,"%lf %lf %lf %lf %lf%[^\n]*1[\n]",&a,&b,&c,&d,&e,buf);
-          if (item>0 && cnt<objnum) {
-            objects[cnt].m=a;
-            objects[cnt].x=b;
-            objects[cnt].y=c;
-            objects[cnt].vx=d;
-            objects[cnt].vy=e;
-            cnt+=1;
-          }
-          else {
-            flag=0;
-          }
+  size_t objnum =atoi(argv[1]);
+  //printf("%zu\n",objnum);
+  Object objects[objnum];
+  FILE *fp;
+  int flag=1;
+  int cnt=0;
+  if ((fp =fopen(argv[2],"r"))!=NULL) {
+    while (flag==1) {
+      char buf[100];
+      if ( fscanf(fp,"%[^\n]%*1[\n]",buf) == -1 ) {
+        flag=0;
+      }
+      if (cnt<objnum) {
+        if (sscanf(buf,"%lf %lf %lf %lf %lf", &objects[cnt].m, &objects[cnt].x, &objects[cnt].y, &objects[cnt].vx, &objects[cnt].vy) ==5) {
+          cnt+=1;
         }
       }
-      if (objnum>cnt+1) {
-        for (int i=0;i<objnum-cnt-1;i++) {
-          objects[cnt].m=0;
-          objects[cnt].x=-1000;
-          objects[cnt].y=-1000;
-          objects[cnt].vx=0;
-          objects[cnt].vy=0;
-        }
+      else {
+        flag=0;
+      }
+    }
+    if (objnum>cnt) {
+      for (int i=0;i<objnum-cnt;i++) {
+        objects[i+cnt].m=0;
+        objects[i+cnt].x=-1000;
+        objects[i+cnt].y=-1000;
+        objects[i+cnt].vx=0;
+        objects[i+cnt].vy=0;
       }
     }
   }
