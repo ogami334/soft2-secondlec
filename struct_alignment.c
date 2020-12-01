@@ -75,10 +75,6 @@ int main (int argc, char**argv)
   printf("%p\n",&s_begin.weight);
   printf("\n");
 
-
-
-  // do_something!!
-
   /* 以下には各構造体のサイズをsizeof演算子で計算し、表示する */
   long size_send = sizeof s_end;
   long size_s3 = sizeof s3;
@@ -93,9 +89,5 @@ int main (int argc, char**argv)
   printf("s1      %ld\n",size_s1);
   printf("sbegin  %ld\n",size_sbegin);
 
-
-
-  // do_something!!
-  
   return 0;
 }

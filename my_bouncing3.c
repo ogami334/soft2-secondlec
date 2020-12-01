@@ -79,7 +79,7 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
     }
   }
   for (int i=0;i<numobj;i++) {
-    if ((-cond.height <= 2*objs[i].y) && (2*objs[i].y <=cond.height) && (-cond.width <= 2*objs[i].x) && (2*objs[i].x <= cond.width)) {
+    if ((objs[i].m>0) && (-cond.height <= 2*objs[i].y) && (2*objs[i].y <=cond.height) && (-cond.width <= 2*objs[i].x) && (2*objs[i].x <= cond.width)) {
       map[(int) (objs[i].y + cond.height/2)][(int) (objs[i].x + cond.width/2)]=1;
     }
   }
@@ -134,6 +134,23 @@ void my_bounce(Object objs[], const size_t numobj, const Condition cond) {
   }
 } //衝突に関してはひとまず、衝突せずに動いた場合の壁からの距離を折り返し、速度を(-e)倍にするという実装にしている
 //速度がとても大きいとバグの原因になりそう
+void my_integration(Object objs[], const size_t numobj, const Condition cond,double dist) {
+    for (int i=0;i<numobj;i++) {
+        for (int j=0;j<numobj;j++) {
+            if (i>=j) {
+                continue;
+            } 
+            if (pow(objs[i].x-objs[j].x,2)+pow(objs[i].y-objs[j].y,2)<pow(dist,2)) {
+                objs[i].vx=(objs[i].m *objs[i].vx+ objs[j].m * objs[j].vx)/(objs[i].m+objs[j].m);
+                objs[j].vx=0;
+                objs[i].vy=(objs[i].m *objs[i].vy+ objs[j].m * objs[j].vy)/(objs[i].m+objs[j].m);
+                objs[j].vy=0;
+                objs[i].m=objs[i].m+objs[j].m;
+                objs[j].m=0;
+            }
+        }
+    }
+}
 
 int main(int argc, char **argv){
   const Condition cond = {
@@ -142,7 +159,7 @@ int main(int argc, char **argv){
 		    .G = 1.0,
 		    .dt = 1.0,
 		    .corx = 0.2,
-        .cory = 0.8
+            .cory = 0.8
   };//これは変えなくて良さそう
   
   if ( argc != 3 ) {
@@ -195,9 +212,9 @@ int main(int argc, char **argv){
     //update_velocities(objects, objnum, cond);
     //update_positions(objects, objnum, cond);
     my_update_velocities_and_positions(objects,objnum,cond);
-
     //bounce(objects, objnum, cond);
     my_bounce(objects, objnum, cond);
+    my_integration(objects, objnum, cond,4.0);
     
     // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする
     my_plot_objects(objects, objnum, t, cond);
