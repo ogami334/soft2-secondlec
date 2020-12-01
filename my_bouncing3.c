@@ -206,7 +206,7 @@ int main(int argc, char **argv){
     t = i * cond.dt;
     my_update_velocities_and_positions(objects,objnum,cond);
     my_bounce(objects, objnum, cond);
-    my_integration(objects, objnum, cond,4.0);
+    my_integration(objects, objnum, cond,2.0);
     // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする
     my_plot_objects(objects, objnum, t, cond);
     usleep(200 * 1000); // 200 x 1000us = 200 ms ずつ停止
