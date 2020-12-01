@@ -169,13 +169,14 @@ int main(int argc, char **argv){
       char buf[100];
       if ( fscanf(fp,"%[^\n]%*1[\n]",buf) == -1 ) {
         flag=0;
+        break;
       }
       if (cnt<objnum) {
         if (sscanf(buf,"%lf %lf %lf %lf %lf", &objects[cnt].m, &objects[cnt].x, &objects[cnt].y, &objects[cnt].vx, &objects[cnt].vy) ==5) {
           cnt+=1;
         }
       }
-      else {
+      if (cnt>=objnum) {
         flag=0;
       }
     }
