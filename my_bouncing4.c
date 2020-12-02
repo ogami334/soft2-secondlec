@@ -1,4 +1,4 @@
-//二次元化する
+//壁を取り払ってみた(合体はあり)
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -196,18 +196,14 @@ int main(int argc, char **argv){
       }
     }
   }
-  
-
-  // シミュレーション. ループは整数で回しつつ、実数時間も更新する
   const double stop_time = 400;
   double t = 0;
   printf("\n");
   for (int i = 0 ; t <= stop_time ; i++){
     system("clear");
     t = i * cond.dt;
-    my_integration(objects, objnum, cond,2.7);
+    my_integration(objects, objnum, cond,3.0);
     my_update_velocities_and_positions(objects,objnum,cond);
-    my_bounce(objects, objnum, cond);
     // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする
     my_plot_objects(objects, objnum, t, cond);
     usleep(200 * 1000); // 200 x 1000us = 200 ms ずつ停止
