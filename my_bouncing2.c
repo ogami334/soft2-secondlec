@@ -129,7 +129,7 @@ void my_bounce(Object objs[], const size_t numobj, const Condition cond) {
 
 int main(int argc, char **argv){
   const Condition cond = {
-		    .width  = 75,
+		    .width  = 80,
 		    .height = 40,
 		    .G = 1.0,
 		    .dt = 1.0,

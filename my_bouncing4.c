@@ -1,4 +1,3 @@
-//壁を取り払ってみた(合体はあり)
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -65,7 +64,7 @@ void my_update_velocities_and_positions(Object objs[], const size_t numobj, cons
 }
 
 
-void my_plot_objects(Object objs[], const size_t numobj, const double t, const Condition cond) {
+void my_plot_objects(Object objs[], const size_t numobj, const double t, const Condition cond,int hole) {
   int map[cond.height][cond.width];
   for (int i=0;i<cond.height;i++) {
     for (int j=0;j<cond.width;j++) {
@@ -105,6 +104,7 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
     }
   }
   printf("\n");
+  printf("%d objects are in the hole\n.",hole);
   
 }
 
@@ -149,14 +149,24 @@ void my_integration(Object objs[], const size_t numobj, const Condition cond,dou
     }
 }//任意の二物体の組に関して、距離がdist以下になったら運動量保存則に基づき、融合して一つの物体になり、速度が変化します。
 
+void blackhole(Object objs[],const size_t numobj,const Condition cond,int *cnt) {
+    for (int i=0;i<numobj;i++) {
+        if ((fabs(objs[i].x)<1.5) && (fabs(objs[i].y) <1.5) && (objs[i].exist ==1)) {
+            objs[i].exist=0;
+            objs[i].m=0;
+            *cnt+=1;     
+        }
+    } //観測された時刻にある範囲に入ってしまった物体は、消失してしまいます(物理シュミレーションとは...)
+}//最後まで消失せずに残った物体の勝ちです
+
 int main(int argc, char **argv){
   const Condition cond = {
 		    .width  = 80,
 		    .height = 40,
 		    .G = 1.0,
 		    .dt = 1.0,
-		    .corx = 0.5,
-        .cory = 0.9
+		    .corx = 0.8,
+            .cory = 0.8
   };
   
   if ( argc != 3 ) {
@@ -168,6 +178,7 @@ int main(int argc, char **argv){
   FILE *fp;
   int flag=1;
   int cnt=0;
+  int hole=0;
   if ((fp =fopen(argv[2],"r"))!=NULL) {
     while (flag==1) {
       char buf[100];
@@ -196,18 +207,23 @@ int main(int argc, char **argv){
       }
     }
   }
+  
+
+  // シミュレーション. ループは整数で回しつつ、実数時間も更新する
   const double stop_time = 400;
   double t = 0;
   printf("\n");
   for (int i = 0 ; t <= stop_time ; i++){
     system("clear");
     t = i * cond.dt;
-    my_integration(objects, objnum, cond,3.0);
+    blackhole(objects,objnum,cond,&hole);
+    my_integration(objects, objnum, cond,1.0);
     my_update_velocities_and_positions(objects,objnum,cond);
+    my_bounce(objects, objnum, cond);
     // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする
-    my_plot_objects(objects, objnum, t, cond);
+    my_plot_objects(objects, objnum, t, cond,hole);
     usleep(200 * 1000); // 200 x 1000us = 200 ms ずつ停止
-    printf("\e[%dA", cond.height+3);// 壁とパラメータ表示分で3行
+    printf("\e[%dA", cond.height+4);// 壁とパラメータ表示分で3行
   }
   return EXIT_SUCCESS;
 }
