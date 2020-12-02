@@ -110,19 +110,19 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
 
 void my_bounce(Object objs[], const size_t numobj, const Condition cond) {
   for (int i=0;i<numobj;i++) {
-    if (objs[i].prev_y < cond.height/2 && objs[i].y > cond.height/2) {
+    if (objs[i].prev_y <= cond.height/2 && objs[i].y > cond.height/2) {
       objs[i].vy *= -(cond.cory);
       objs[i].y = cond.height -objs[i].y;
     }
-    else if (objs[i].prev_y > -cond.height/2 && objs[i].y < -cond.height/2) {
+    else if (objs[i].prev_y >= -cond.height/2 && objs[i].y < -cond.height/2) {
       objs[i].vy *= -(cond.cory);
       objs[i].y = -cond.height - objs[i].y;
     }
-    if (objs[i].prev_x < cond.width/2 && objs[i].x > cond.width/2) {
+    if (objs[i].prev_x <= cond.width/2 && objs[i].x > cond.width/2) {
       objs[i].vx*= -(cond.corx);
       objs[i].x = cond.width -objs[i].x;
     }
-    else if (objs[i].prev_x > -cond.width/2 && objs[i].x < -cond.width/2) {
+    else if (objs[i].prev_x >= -cond.width/2 && objs[i].x < -cond.width/2) {
       objs[i].vx *= -(cond.corx);
       objs[i].x = -cond.width - objs[i].x;
     }
@@ -136,7 +136,7 @@ void my_integration(Object objs[], const size_t numobj, const Condition cond,dou
             if (i>=j) {
                 continue;
             } 
-            if (pow(objs[i].x-objs[j].x,2)+pow(objs[i].y-objs[j].y,2)<pow(dist,2)) {
+            if (pow(objs[i].x-objs[j].x,2)+pow(objs[i].y-objs[j].y,2)<=pow(dist,2) && (objs[i].m>0.5) && (objs[j].m >0.5)) {
                 objs[i].vx=(objs[i].m *objs[i].vx+ objs[j].m * objs[j].vx)/(objs[i].m+objs[j].m);
                 objs[j].vx=0;
                 objs[i].vy=(objs[i].m *objs[i].vy+ objs[j].m * objs[j].vy)/(objs[i].m+objs[j].m);
@@ -144,7 +144,7 @@ void my_integration(Object objs[], const size_t numobj, const Condition cond,dou
                 objs[i].m=objs[i].m+objs[j].m;
                 objs[j].m=0;
                 objs[j].exist=0;//jの方は消える
-            }
+            } //質量0の物体が融合して0割が生じるのを回避しています。
         }
     }
 }//任意の二物体の組に関して、距離がdist以下になったら運動量保存則に基づき、融合して一つの物体になり、速度が変化します。
@@ -203,10 +203,11 @@ int main(int argc, char **argv){
   double t = 0;
   printf("\n");
   for (int i = 0 ; t <= stop_time ; i++){
+    system("clear");
     t = i * cond.dt;
+    my_integration(objects, objnum, cond,2.7);
     my_update_velocities_and_positions(objects,objnum,cond);
     my_bounce(objects, objnum, cond);
-    my_integration(objects, objnum, cond,2.0);
     // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする
     my_plot_objects(objects, objnum, t, cond);
     usleep(200 * 1000); // 200 x 1000us = 200 ms ずつ停止
