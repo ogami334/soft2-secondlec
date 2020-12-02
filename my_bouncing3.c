@@ -156,7 +156,7 @@ int main(int argc, char **argv){
 		    .G = 1.0,
 		    .dt = 1.0,
 		    .corx = 0.5,
-        .cory = 0.9
+        .cory = 0.8
   };
   
   if ( argc != 3 ) {
@@ -205,7 +205,7 @@ int main(int argc, char **argv){
   for (int i = 0 ; t <= stop_time ; i++){
     system("clear");
     t = i * cond.dt;
-    my_integration(objects, objnum, cond,2.7);
+    my_integration(objects, objnum, cond,3.0);
     my_update_velocities_and_positions(objects,objnum,cond);
     my_bounce(objects, objnum, cond);
     // 表示の座標系は width/2, height/2 のピクセル位置が原点となるようにする

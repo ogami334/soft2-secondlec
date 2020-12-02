@@ -106,19 +106,19 @@ void my_plot_objects(Object objs[], const size_t numobj, const double t, const C
 
 void my_bounce(Object objs[], const size_t numobj, const Condition cond) {
   for (int i=0;i<numobj;i++) {
-    if (objs[i].prev_y < cond.height/2 && objs[i].y > cond.height/2) {
+    if (objs[i].prev_y <= cond.height/2 && objs[i].y > cond.height/2) {
       objs[i].vy *= -(cond.cory);
       objs[i].y = cond.height -objs[i].y;
     }
-    else if (objs[i].prev_y > -cond.height/2 && objs[i].y < -cond.height/2) {
+    if (objs[i].prev_y >= -cond.height/2 && objs[i].y < -cond.height/2) {
       objs[i].vy *= -(cond.cory);
       objs[i].y = -cond.height - objs[i].y;
     }
-    if (objs[i].prev_x < cond.width/2 && objs[i].x > cond.width/2) {
+    if (objs[i].prev_x <= cond.width/2 && objs[i].x > cond.width/2) {
       objs[i].vx*= -(cond.corx);
       objs[i].x = cond.width -objs[i].x;
     }
-    else if (objs[i].prev_x > -cond.width/2 && objs[i].x < -cond.width/2) {
+    if (objs[i].prev_x >= -cond.width/2 && objs[i].x < -cond.width/2) {
       objs[i].vx *= -(cond.corx);
       objs[i].x = -cond.width - objs[i].x;
     }
@@ -133,7 +133,7 @@ int main(int argc, char **argv){
 		    .height = 40,
 		    .G = 1.0,
 		    .dt = 1.0,
-		    .corx = 0.2,
+		    .corx = 0.5,
         .cory = 0.8
   };
   
